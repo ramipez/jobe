@@ -22,7 +22,7 @@ class Python3Task extends LanguageTask
     public function __construct($filename, $input, $params)
     {
         parent::__construct($filename, $input, $params);
-        $this->default_params['memorylimit'] = 1000; // NumpPy+matplotlib is getting greedier.
+        $this->default_params['memorylimit'] = 1500; // NumpPy+matplotlib is getting greedier.
         $this->default_params['interpreterargs'] = array('-BE');
     }
 

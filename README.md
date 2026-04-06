@@ -1079,3 +1079,9 @@ throughput.
      for other apps.
   1. Remove temporary home directory when task exits (belts and braces - language
      tasks clean up anyway).
+
+### 2.2.2 (6 April 2026)
+
+  1. Bug fix: API keys not working.
+  1. Increment default memory allocation for Python from 1GB to 1.5GB to accommodate steady growth in memory requirements,
+     particularly of support packages.

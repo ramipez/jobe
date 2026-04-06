@@ -23,6 +23,7 @@ class Throttle implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
+        helper('MY_cors');
         $api_keys_in_use = config('Jobe')->require_api_keys;
         if ($api_keys_in_use) {
             $keys = config('Jobe')->api_keys;
