@@ -282,6 +282,103 @@ if check_code(__student_answer__):
     'expect': { 'outcome': 15, 'stdout': "Un rôle délétère\n" }
 },
 
+# ======= Haskell tests ===============
+{
+    'comment': 'Valid Haskell hello world',
+    'language_id': 'haskell',
+    'sourcecode': r'''main :: IO ()
+main = putStrLn "Hello from Haskell"
+''',
+    'sourcefilename': 'Main.hs',
+    'expect': { 'outcome': 15, 'stdout': 'Hello from Haskell\n' }
+},
+
+{
+    'comment': 'Haskell with stdin',
+    'language_id': 'haskell',
+    'sourcecode': r'''main :: IO ()
+main = do
+    a <- getLine
+    b <- getLine
+    putStrLn a
+    putStrLn b
+''',
+    'input': 'Line1\nLine2\n',
+    'sourcefilename': 'Main.hs',
+    'expect': { 'outcome': 15, 'stdout': 'Line1\nLine2\n' }
+},
+
+{
+    'comment': 'Syntactically invalid Haskell',
+    'language_id': 'haskell',
+    'sourcecode': r'''main :: IO ()
+main = putStrLn "Unclosed
+''',
+    'sourcefilename': 'Main.hs',
+    'expect': { 'outcome': 11 }
+},
+
+{
+    'comment': 'Haskell with inline support file content',
+    'language_id': 'haskell',
+    'sourcecode': r'''module Main where
+import Helper
+main :: IO ()
+main = putStrLn helperMessage
+''',
+    'sourcefilename': 'Main.hs',
+    'file_list': [
+        ('inlinehelp1', 'Helper.hs', 'module Helper where\nhelperMessage :: String\nhelperMessage = "Hello helper"\n')
+    ],
+    'expect': { 'outcome': 15, 'stdout': 'Hello helper\n' }
+},
+
+{
+    'comment': 'Haskell using sourcefilecontent alias',
+    'language_id': 'haskell',
+    'sourcefilecontent': r'''main :: IO ()
+main = putStrLn "Hello from sourcefilecontent"
+''',
+    'sourcefilename': 'Main.hs',
+    'expect': { 'outcome': 15, 'stdout': 'Hello from sourcefilecontent\n' }
+},
+
+# ======= WinHugs compatibility tests ===============
+{
+    'comment': 'Valid WinHugs compatibility run',
+    'language_id': 'winhugs',
+    'sourcecode': r'''main :: IO ()
+main = putStrLn "Hello from winhugs"
+''',
+    'sourcefilename': 'Main.hs',
+    'expect': { 'outcome': 15, 'stdout': 'Hello from winhugs\n' }
+},
+
+{
+    'comment': 'WinHugs compatibility with support file',
+    'language_id': 'winhugs',
+    'sourcecode': r'''module Main where
+import Support
+main :: IO ()
+main = putStrLn supportMessage
+''',
+    'sourcefilename': 'Main.hs',
+    'file_list': [
+        ('inlinehelp2', 'Support.hs', 'module Support where\nsupportMessage :: String\nsupportMessage = "Support OK"\n')
+    ],
+    'expect': { 'outcome': 15, 'stdout': 'Support OK\n' }
+},
+
+{
+    'comment': 'WinHugs syntax error reports compile failure',
+    'language_id': 'winhugs',
+    'sourcecode': r'''main :: IO ()
+main = putStrLn "oops
+''',
+    'sourcefilename': 'Main.hs',
+    'expect': { 'outcome': 11 }
+},
+
 # ======= C Tests ===============
 {
     'comment': 'Test good C hello world',

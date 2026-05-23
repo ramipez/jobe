@@ -52,6 +52,8 @@ class Jobe extends BaseConfig
      | version)
      */
     public string $python3_version = 'python3';
+    public string $haskell_ghc = 'ghc';
+    public string $haskell_runghc = 'runghc';
 
     /*
     |--------------------------------------------------------------------------

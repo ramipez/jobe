@@ -16,6 +16,7 @@ namespace Jobe;
 use App\Models\LanguagesModel;
 
 define('MIN_FILE_IDENTIFIER_SIZE', 8);
+define('MAX_INLINE_FILE_CONTENT_BYTES', 1048576);
 
 class RunSpecifier
 {
@@ -38,11 +39,16 @@ class RunSpecifier
             throw new JobException('No run_spec attribute found in post data', 400);
         }
 
-        foreach (['sourcecode', 'language_id'] as $attr) {
+        foreach (['language_id'] as $attr) {
             if (!isset($run->$attr)) {
                 throw new JobException("run_spec is missing the required attribute '$attr'", 400);
             }
             $this->$attr = $run->$attr;
+        }
+
+        $this->sourcecode = $run->sourcecode ?? $run->sourcefilecontent ?? '';
+        if ($this->sourcecode === '') {
+            throw new JobException("run_spec is missing the required attribute 'sourcecode'", 400);
         }
 
         $this->language_id = strtolower($this->language_id); // Normalise it.
@@ -108,12 +114,22 @@ class RunSpecifier
 
     private function isValidFilespec($file)
     {
-        return (count($file) == 2 || count($file) == 3) &&
+        $isBasicValid = (count($file) == 2 || count($file) == 3) &&
          is_string($file[0]) &&
          is_string($file[1]) &&
          strlen($file[0]) >= MIN_FILE_IDENTIFIER_SIZE &&
          ctype_alnum($file[0]) &&
          strlen($file[1]) > 0 &&
          ctype_alnum(str_replace(array('-', '_', '.'), '', $file[1]));
+
+        if (!$isBasicValid) {
+            return false;
+        }
+
+        if (count($file) == 3) {
+            return is_string($file[2]) && strlen($file[2]) <= MAX_INLINE_FILE_CONTENT_BYTES;
+        }
+
+        return true;
     }
 }
