@@ -22,6 +22,8 @@ class HaskellTask extends LanguageTask
         $this->default_params['memorylimit'] = 1200;
         $this->default_params['cputime'] = 10;
         $this->default_params['compileargs'] = ['-O0'];
+        // Force Haskell parsing regardless of source extension (e.g. .haskell).
+        $this->default_params['interpreterargs'] = ['-x', 'hs'];
 
         $requestedMode = strtolower($params['haskell_mode'] ?? 'compiled');
         $this->interpretedMode = in_array($requestedMode, ['interpreted', 'runghc'], true);
@@ -45,7 +47,7 @@ class HaskellTask extends LanguageTask
 
             // If GHC is present, use syntax-only check so syntax issues map to compile errors.
             if (self::commandExists(self::ghcExecutable())) {
-                $cmd = self::ghcExecutable() . ' -fno-code ' . $this->sourceFileName;
+                $cmd = self::ghcExecutable() . ' -fno-code -x hs ' . $this->sourceFileName;
                 list($output, $this->cmpinfo) = $this->runInSandbox($cmd);
                 if (!empty($output) && !empty($this->cmpinfo)) {
                     $this->cmpinfo = $output . "\n" . $this->cmpinfo;
@@ -57,7 +59,7 @@ class HaskellTask extends LanguageTask
         $src = basename($this->sourceFileName);
         $this->executableFileName = 'prog.hs.exe';
         $compileArgs = implode(' ', $this->getParam('compileargs'));
-        $cmd = self::ghcExecutable() . " {$compileArgs} -o {$this->executableFileName} {$src}";
+        $cmd = self::ghcExecutable() . " {$compileArgs} -x hs -o {$this->executableFileName} {$src}";
         list($output, $this->cmpinfo) = $this->runInSandbox($cmd);
 
         // Infrastructure fallback only (not for user compile errors).
