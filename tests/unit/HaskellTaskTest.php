@@ -36,6 +36,7 @@ final class HaskellTaskTest extends CIUnitTestCase
 
         $this->assertSame($expectedExecutable, $task->getExecutablePath());
         $this->assertSame('Main.hs', $task->getTargetFile());
+        $this->assertSame([$expectedExecutable, 'Main.hs'], $task->getRunCommand());
     }
 
     public function testCompiledModeUsesBuiltBinaryAndNoTargetFile(): void

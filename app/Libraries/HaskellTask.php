@@ -91,6 +91,17 @@ class HaskellTask extends LanguageTask
         return '';
     }
 
+    public function getRunCommand()
+    {
+        if ($this->interpretedMode) {
+            $cmd = [self::runghcExecutable()];
+            $cmd[] = $this->getTargetFile();
+            return array_merge($cmd, $this->getParam('runargs'));
+        }
+
+        return parent::getRunCommand();
+    }
+
     protected static function ghcExecutable()
     {
         $configured = config('Jobe')->haskell_ghc;

@@ -379,6 +379,39 @@ main = putStrLn "oops
     'expect': { 'outcome': 11 }
 },
 
+# ======= Prolog tests ===============
+{
+    'comment': 'Valid Prolog hello world',
+    'language_id': 'prolog',
+    'sourcecode': r'''main :- format('Hello from Prolog~n', []).
+''',
+    'sourcefilename': 'Main.pl',
+    'expect': { 'outcome': 15, 'stdout': 'Hello from Prolog\n' }
+},
+
+{
+    'comment': 'Prolog with inline support file content',
+    'language_id': 'prolog',
+    'sourcecode': r''':- ['Helper.pl'].
+main :- helper_message(Message), format('~w~n', [Message]).
+''',
+    'sourcefilename': 'Main.pl',
+    'file_list': [
+        ('inlineprolog1', 'Helper.pl', "helper_message('Hello helper').\n")
+    ],
+    'expect': { 'outcome': 15, 'stdout': 'Hello helper\n' }
+},
+
+{
+    'comment': 'Syntactically invalid Prolog',
+    'language_id': 'prolog',
+    'sourcecode': r'''main :- format('Hello from Prolog~n', []).
+broken :- format('Oops~n', [).
+''',
+    'sourcefilename': 'Main.pl',
+    'expect': { 'outcome': 11 }
+},
+
 # ======= C Tests ===============
 {
     'comment': 'Test good C hello world',

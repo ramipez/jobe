@@ -54,6 +54,7 @@ class Jobe extends BaseConfig
     public string $python3_version = 'python3';
     public string $haskell_ghc = 'ghc';
     public string $haskell_runghc = 'runghc';
+    public string $prolog_swipl = 'swipl';
 
     /*
     |--------------------------------------------------------------------------
